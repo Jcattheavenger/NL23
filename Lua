@@ -1,0 +1,959 @@
+---<Variables>---
+local Version = "v2.5.9"
+
+Left = 0.25
+Right = 0.75
+
+local Hours = 0
+local Minutes = 0
+local Seconds = 0
+
+local VectorCenter = Vector2.new(0.5, 0.5)
+local UDimCenter = UDim2.new(0.5, 0, 0.5, 0)
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local UserInputService = game:GetService("UserInputService")
+
+Black = Color3.fromRGB(0, 0, 0)
+White = Color3.fromRGB(255, 255, 255)
+Red = Color3.fromRGB(255, 0, 0)
+Green = Color3.fromRGB(0, 175, 0)
+Blue = Color3.fromRGB(0, 0, 255)
+Cyan = Color3.fromRGB(0, 255, 255)
+Yellow = Color3.fromRGB(255, 255, 0)
+Pink = Color3.fromRGB(255, 0, 255)
+lPink = Color3.fromRGB(255, 100, 255)
+TrueGreen = Color3.fromRGB(0, 255 ,0)
+Purple = Color3.fromRGB(176, 38, 255)
+Orange = Color3.fromRGB(255, 165, 0)
+lBlack = Color3.fromRGB(25, 25, 25)
+dBlack = Color3.fromRGB(15, 15, 15)
+dWhite = Color3.fromRGB(230, 230, 230)
+lGrey = Color3.fromRGB(150, 150, 150)
+Shadow = Color3.fromRGB(46, 26, 71)
+
+AccentColor = lPink
+
+Checkmark = "http://www.roblox.com/asset/?id=8439229998"
+
+Settings = {
+    EspTeamCheck = true,
+    NameEsp = false,
+    BoxEsp = false,
+    ChamsEsp = false,
+    HealthEsp = false,
+    ChamsOpacity = 5,
+    ChamsOpacityTranslation = 0,
+    ChatSpam = false,
+}
+
+---<Functions>---
+local function GenString()
+    Chars = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","1","2","3","4","5","6","7","8","9","0"}
+
+    Char1 = Chars[math.random(1, #Chars)]
+    Char2 = Chars[math.random(1, #Chars)]
+    Char3 = Chars[math.random(1, #Chars)]
+    Char4 = Chars[math.random(1, #Chars)]
+    Char5 = Chars[math.random(1, #Chars)]
+
+    String = ""..Char1..Char2..Char3..Char4..Char5..""
+return String end
+
+local function CreateNotification(stringText, intDuration, stringButton)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Ninelives "..Version.."",
+        Text = stringText,
+        Duration = intDuration,
+        Button1 = stringButton
+    })
+end
+
+local function PlaySound()
+    Sound = Instance.new("Sound", game:GetService("Workspace"))
+    Sound.SoundId = "rbxassetid://6887181639"
+    Sound.Volume = 1
+    Sound.PlayOnRemove = true
+    Sound:Destroy()
+end
+
+local function ChatSpam()
+    ChatTable = {
+        "Ninelives owns me and all!",
+        "God I wish I had Ninelives.",
+        "Ninelives, 10 steps ahead of the game.",
+        "I'm not using Ninelives! You're just bad.",
+        "I'm not cheating but if I was I would be using Ninelives."
+    }
+
+    if game.PlaceId == 301549746 or game.PlaceId == 1480424328 or game.PlaceId == 1869597719 then
+        game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
+        wait(3)
+    elseif game.PlaceId == 286090429 then
+        game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
+        wait(3)
+    else
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(ChatTable[math.random(1, #ChatTable)], "All")
+        wait(3)
+    end
+end
+
+local function CreateGui(Variable)
+    Variable.Name = GenString()
+    Variable.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    Variable.ResetOnSpawn = false
+end
+
+local function CreateTabButton(Variable, intPosY, varColor, stringText)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0.5, 0, intPosY, 0)
+    Variable.Size = UDim2.new(0.8, 0, 0.1, 0)
+    Variable.BackgroundColor3 = lBlack
+    Variable.TextColor3 = varColor
+    Variable.Font = Enum.Font.ArialBold
+    Variable.TextSize = 25
+    Variable.Text = stringText
+
+    UICorner = Instance.new("UICorner", Variable)
+    UICorner.Name = GenString()
+end
+
+local function CreateTab(Variable, boolVisible)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0.635, 0, 0.5225)
+    Variable.Size = UDim2.new(0.7, 0, 0.9, 0)
+    Variable.BackgroundTransparency = 1
+    Variable.Visible = boolVisible
+end
+
+local function CreateOutline(Variable, intPos)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(intPos, 0, 0.5, 0)
+    Variable.Size = UDim2.new(0.45, 0, 1, 0)
+    Variable.BackgroundColor3 = lBlack
+    Variable.BorderColor3 = AccentColor
+    Variable.BorderSizePixel = 1
+    Variable.BorderMode = Enum.BorderMode.Inset
+end
+
+local function CreateOutlineTitle(Variable, stringText, intLength)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0.5, 0, 0, 0)
+    Variable.Size = UDim2.new(0, intLength, 0, 20)
+    Variable.BackgroundTransparency = 0
+    Variable.BorderSizePixel = 0
+    Variable.BackgroundColor3 = lBlack
+    Variable.TextSize = 10
+    Variable.Font = Enum.Font.Arial
+    Variable.TextColor3 = White
+    Variable.Text = stringText
+end
+
+local function CreateCheckBox(Variable, intPosY, varColor)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0.12, 0, intPosY, 0)
+    Variable.Size = UDim2.new(0, 20, 0, 20)
+    Variable.BackgroundColor3 = varColor
+    Variable.BorderSizePixel = 1
+    Variable.BorderColor3 = AccentColor
+    Variable.Text = ""
+
+    UICorner = Instance.new("UICorner", Variable)
+    UICorner.Name = GenString()
+    UICorner.CornerRadius = UDim.new(1, 1)
+end
+
+local function CreateCheckBoxTitle(Variable, stringText)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = Vector2.new(0, 0.5)
+    Variable.Position = UDim2.new(1.5, 0, 0.5, 0)
+    Variable.Size = UDim2.new(0, 150, 1, 0)
+    Variable.BackgroundTransparency = 1
+    Variable.TextColor3 = White
+    Variable.TextSize = 15
+    Variable.TextXAlignment = Enum.TextXAlignment.Left
+    Variable.Font = Enum.Font.Arial
+    Variable.Text = stringText
+end
+
+local function CreateTextLabel(Variable, intPosY)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0.12, 0, intPosY, 0)
+    Variable.Size = UDim2.new(0, 20, 0, 20)
+    Variable.BackgroundColor3 = lBlack
+    Variable.BorderSizePixel = 1
+    Variable.BorderColor3 = AccentColor
+    Variable.TextColor3 = White
+    Variable.Text = tostring(Settings.ChamsOpacity)
+end
+
+local function CreatvEdit(Variable, Variable2)
+    Variable.Name = GenString()
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0, 0, 1.5, 0)
+    Variable.Size = UDim2.new(1, 0, 1, 0)
+    Variable.BorderColor3 = AccentColor
+    Variable.BackgroundColor3 = lBlack
+    Variable.TextColor3 = White
+    Variable.Text = "+"
+
+    Variable2.Name = GenString()
+    Variable2.AnchorPoint = VectorCenter
+    Variable2.Position = UDim2.new(1, 0, 1.5, 0)
+    Variable2.Size = UDim2.new(1, 0, 1, 0)
+    Variable2.BorderColor3 = AccentColor
+    Variable2.BackgroundColor3 = lBlack
+    Variable2.TextColor3 = White
+    Variable2.Text = "-"
+end
+
+---<Instances>---
+local Contents = Instance.new("Folder", game.CoreGui)
+local MenuGui = Instance.new("ScreenGui", Contents)
+local WatermarkGui = Instance.new("ScreenGui",Contents)
+
+local WatermarkBase = Instance.new("TextLabel", WatermarkGui)
+local WatermarkUICorner = Instance.new("UICorner", WatermarkBase)
+local WatermarkBottomLine = Instance.new("Frame",WatermarkBase)
+
+local MenuBase = Instance.new("Frame", MenuGui)
+local MenuTitle = Instance.new("TextLabel", MenuBase)
+local TitleLine = Instance.new("Frame", MenuTitle)
+local MenuInfoBar = Instance.new("Frame", MenuBase)
+
+local PlayerAvatar = Instance.new("ImageLabel", MenuInfoBar)
+local PlayerAvatarUICorner = Instance.new("UICorner", PlayerAvatar)
+
+local InfoBarVisualsButton = Instance.new("TextButton", MenuInfoBar)
+local InfoBarLegitButton = Instance.new("TextButton", MenuInfoBar)
+local InfoBarRageButton = Instance.new("TextButton", MenuInfoBar)
+local InfoBarMiscButton = Instance.new("TextButton", MenuInfoBar)
+local InfoBarColorsButton = Instance.new("TextButton", MenuInfoBar)
+
+local MenuVisualsTab = Instance.new("Frame", MenuBase)
+local MenuLegitTab = Instance.new("Frame", MenuBase)
+local MenuRageTab = Instance.new("Frame", MenuBase)
+local MenuMiscTab = Instance.new("Frame", MenuBase)
+local MenuColorsTab = Instance.new("Frame", MenuBase)
+
+local VisualsTabOutline1 = Instance.new("Frame", MenuVisualsTab)
+local VisualsTabOutline2 = Instance.new("Frame", MenuVisualsTab)
+local LegitTabOutline1 = Instance.new("Frame", MenuLegitTab)
+local LegitTabOutline2 = Instance.new("Frame", MenuLegitTab)
+local RageTabOutline1 = Instance.new("Frame", MenuRageTab)
+local RageTabOutline2 = Instance.new("Frame", MenuRageTab)
+local MiscTabOutline1 = Instance.new("Frame", MenuMiscTab)
+local MiscTabOutline2 = Instance.new("Frame", MenuMiscTab)
+local ColorsTabOutline1 = Instance.new("Frame", MenuColorsTab)
+local ColorsTabOutline2 = Instance.new("Frame", MenuColorsTab)
+
+local VisualsTabOutline1Title = Instance.new("TextLabel", VisualsTabOutline1)
+local VisualsTabOutline2Title = Instance.new("TextLabel", VisualsTabOutline2)
+local LegitTabOutline1Title = Instance.new("TextLabel", LegitTabOutline1)
+local LegitTabOutline2Title = Instance.new("TextLabel", LegitTabOutline2)
+local RageTabOutline1Title = Instance.new("TextLabel", RageTabOutline1)
+local RageTabOutline2Title = Instance.new("TextLabel", RageTabOutline2)
+local MiscTabOutline1Title = Instance.new("TextLabel", MiscTabOutline1)
+local MiscTabOutline2Title = Instance.new("TextLabel", MiscTabOutline2)
+local ColorsTabOutline1Title = Instance.new("TextLabel", ColorsTabOutline1)
+local ColorsTabOutline2Title = Instance.new("TextLabel", ColorsTabOutline2)
+
+local WatermarkToggle = Instance.new("TextButton", MiscTabOutline1)
+local WatermarkToggleTitle = Instance.new("TextLabel", WatermarkToggle)
+
+local ChatSpamToggle = Instance.new("TextButton", MiscTabOutline1)
+local ChatSpamToggleTitle = Instance.new("TextLabel", ChatSpamToggle)
+
+local EspTeamCheckToggle = Instance.new("TextButton", VisualsTabOutline2)
+local EspTeamCheckToggleTitle = Instance.new("TextLabel", EspTeamCheckToggle)
+
+local NameEspToggle = Instance.new("TextButton", VisualsTabOutline1)
+local NameEspToggleTitle = Instance.new("TextLabel", NameEspToggle)
+
+local BoxEspToggle = Instance.new("TextButton", VisualsTabOutline1)
+local BoxEspToggleTitle = Instance.new("TextLabel", BoxEspToggle)
+
+local ChamsEspToggle = Instance.new("TextButton", VisualsTabOutline1)
+local ChamsEspToggleTitle = Instance.new("TextLabel", ChamsEspToggle)
+
+local HealthEspToggle = Instance.new("TextButton", VisualsTabOutline1)
+local HealthEspToggleTitle = Instance.new("TextLabel", HealthEspToggle)
+
+local ChamsOpacityTextBox = Instance.new("TextLabel", VisualsTabOutline2)
+local ChamsOpacityTextBoxTitle = Instance.new("TextLabel", ChamsOpacityTextBox)
+local ChamsOpacityvEdit1 = Instance.new("TextButton", ChamsOpacityTextBox)
+local ChamsOpacityvEdit2 = Instance.new("TextButton", ChamsOpacityTextBox)
+
+---<Properties>---
+PlaySound()
+
+Contents.Name = GenString()
+
+CreateGui(MenuGui)
+CreateGui(WatermarkGui)
+
+WatermarkBase.Name = GenString()
+WatermarkBase.AnchorPoint = VectorCenter
+WatermarkBase.Position = UDim2.new(0.9, 0, 0.02, 0)
+WatermarkBase.Size = UDim2.new(0, 350, 0, 30)
+WatermarkBase.BackgroundColor3 = lBlack
+WatermarkBase.Font = Enum.Font.ArialBold
+WatermarkBase.TextSize = 11
+WatermarkBase.TextColor3 = White
+WatermarkBase.Text = "Ninelives "..Version.." | "..LocalPlayer.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
+
+WatermarkUICorner.Name = GenString()
+
+WatermarkBottomLine.Name = GenString()
+WatermarkBottomLine.AnchorPoint = VectorCenter
+WatermarkBottomLine.Position = UDim2.new(0.5, 0, 0.9, 0)
+WatermarkBottomLine.Size = UDim2.new(1, 0, 0, 5)
+WatermarkBottomLine.BorderSizePixel = 0
+WatermarkBottomLine.BackgroundColor3 = AccentColor
+
+MenuBase.Name = GenString()
+MenuBase.AnchorPoint = VectorCenter
+MenuBase.Position = UDimCenter
+MenuBase.Size = UDim2.new(0, 700, 0, 545)
+MenuBase.BorderSizePixel = 0
+MenuBase.BorderColor3 = lGrey
+MenuBase.BackgroundColor3 = lBlack
+MenuBase.Active = true
+MenuBase.Draggable = true
+
+MenuTitle.Name = GenString()
+MenuTitle.AnchorPoint = Vector2.new(0.5, 0)
+MenuTitle.Position = UDim2.new(0.5, 0, 0.01, 0)
+MenuTitle.Size = UDim2.new(0.98, 0, 0.02, 0)
+MenuTitle.BackgroundTransparency = 1
+MenuTitle.TextColor3 = White
+MenuTitle.TextXAlignment = Enum.TextXAlignment.Left
+MenuTitle.Font = Enum.Font.ArialBold
+MenuTitle.TextScaled = true
+MenuTitle.Text = "Ninelives Beta "..Version..""
+
+TitleLine.Name = GenString()
+TitleLine.AnchorPoint = VectorCenter
+TitleLine.Position = UDim2.new(0.5, 0, 1.5, 0)
+TitleLine.Size = UDim2.new(0, 700, 0.5, 0)
+TitleLine.BorderSizePixel = 0
+TitleLine.BackgroundColor3 = AccentColor
+
+MenuInfoBar.Name = GenString()
+MenuInfoBar.AnchorPoint = VectorCenter
+MenuInfoBar.Position = UDim2.new(0.14, 0, 0.5225, 0)
+MenuInfoBar.Size = UDim2.new(0.25, 0, 0.9, 0)
+MenuInfoBar.BorderSizePixel = 0
+MenuInfoBar.BackgroundTransparency = 0.9
+
+PlayerAvatar.Name = GenString()
+PlayerAvatar.AnchorPoint = VectorCenter
+PlayerAvatar.Position = UDim2.new(0.5, 0, 0.16, 0)
+PlayerAvatar.Size = UDim2.new(0, 150, 0, 150)
+PlayerAvatar.BackgroundColor3 = dBlack
+PlayerAvatar.BorderSizePixel = 0
+PlayerAvatar.Image = game.Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+
+PlayerAvatarUICorner.CornerRadius = UDim.new(1, 1)
+
+CreateTabButton(InfoBarVisualsButton, 0.4, AccentColor, "Visuals")
+CreateTabButton(InfoBarLegitButton, 0.525, White, "Legit")
+CreateTabButton(InfoBarRageButton, 0.65, White, "Rage")
+CreateTabButton(InfoBarMiscButton, 0.775, White, "Misc")
+CreateTabButton(InfoBarColorsButton, 0.9, White, "Colors")
+
+InfoBarVisualsButton.MouseButton1Click:Connect(function()
+    InfoBarVisualsButton.TextColor3 = AccentColor
+    InfoBarLegitButton.TextColor3 = White
+    InfoBarRageButton.TextColor3 = White
+    InfoBarMiscButton.TextColor3 = White
+    InfoBarColorsButton.TextColor3 = White
+
+    MenuVisualsTab.Visible = true
+    MenuLegitTab.Visible = false
+    MenuRageTab.Visible = false
+    MenuMiscTab.Visible = false
+    MenuColorsTab.Visible = false
+end)
+InfoBarLegitButton.MouseButton1Click:Connect(function()
+    InfoBarVisualsButton.TextColor3 = White
+    InfoBarLegitButton.TextColor3 = AccentColor
+    InfoBarRageButton.TextColor3 = White
+    InfoBarMiscButton.TextColor3 = White
+    InfoBarColorsButton.TextColor3 = White
+
+    MenuVisualsTab.Visible = false
+    MenuLegitTab.Visible = true
+    MenuRageTab.Visible = false
+    MenuMiscTab.Visible = false
+    MenuColorsTab.Visible = false
+end)
+InfoBarRageButton.MouseButton1Click:Connect(function()
+    InfoBarVisualsButton.TextColor3 = White
+    InfoBarLegitButton.TextColor3 = White
+    InfoBarRageButton.TextColor3 = AccentColor
+    InfoBarMiscButton.TextColor3 = White
+    InfoBarColorsButton.TextColor3 = White
+
+    MenuVisualsTab.Visible = false
+    MenuLegitTab.Visible = false
+    MenuRageTab.Visible = true
+    MenuMiscTab.Visible = false
+    MenuColorsTab.Visible = false
+end)
+InfoBarMiscButton.MouseButton1Click:Connect(function()
+    InfoBarVisualsButton.TextColor3 = White
+    InfoBarLegitButton.TextColor3 = White
+    InfoBarRageButton.TextColor3 = White
+    InfoBarMiscButton.TextColor3 = AccentColor
+    InfoBarColorsButton.TextColor3 = White
+
+    MenuVisualsTab.Visible = false
+    MenuLegitTab.Visible = false
+    MenuRageTab.Visible = false
+    MenuMiscTab.Visible = true
+    MenuColorsTab.Visible = false
+end)
+InfoBarColorsButton.MouseButton1Click:Connect(function()
+    InfoBarVisualsButton.TextColor3 = White
+    InfoBarLegitButton.TextColor3 = White
+    InfoBarRageButton.TextColor3 = White
+    InfoBarMiscButton.TextColor3 = White
+    InfoBarColorsButton.TextColor3 = AccentColor
+
+    MenuVisualsTab.Visible = false
+    MenuLegitTab.Visible = false
+    MenuRageTab.Visible = false
+    MenuMiscTab.Visible = false
+    MenuColorsTab.Visible = true
+end)
+
+CreateTab(MenuVisualsTab, true)
+CreateTab(MenuLegitTab, false)
+CreateTab(MenuRageTab, false)
+CreateTab(MenuMiscTab, false)
+CreateTab(MenuColorsTab, false)
+
+CreateOutline(VisualsTabOutline1, Left)
+CreateOutline(VisualsTabOutline2, Right)
+CreateOutline(LegitTabOutline1, Left)
+CreateOutline(LegitTabOutline2, Right)
+CreateOutline(RageTabOutline1, Left)
+CreateOutline(RageTabOutline2, Right)
+CreateOutline(MiscTabOutline1, Left)
+CreateOutline(MiscTabOutline2, Right)
+CreateOutline(ColorsTabOutline1, Left)
+CreateOutline(ColorsTabOutline2, Right)
+
+CreateOutlineTitle(VisualsTabOutline1Title, "Player", 40)
+CreateOutlineTitle(VisualsTabOutline2Title, "Other", 40)
+CreateOutlineTitle(LegitTabOutline1Title, "Aimbot", 45)
+CreateOutlineTitle(LegitTabOutline2Title, "Triggerbot", 60)
+CreateOutlineTitle(RageTabOutline1Title, "Rage", 35)
+CreateOutlineTitle(RageTabOutline2Title, "Other", 40)
+CreateOutlineTitle(MiscTabOutline1Title, "General", 50)
+CreateOutlineTitle(MiscTabOutline2Title, "Other", 40)
+CreateOutlineTitle(ColorsTabOutline1Title, "ESP", 30)
+CreateOutlineTitle(ColorsTabOutline2Title, "Other", 40)
+
+CreateCheckBox(WatermarkToggle, 0.1, AccentColor)
+
+WatermarkToggle.MouseButton1Click:Connect(function()
+    WatermarkGui.Enabled = not WatermarkGui.Enabled
+
+    if WatermarkGui.Enabled then
+        WatermarkToggle.BackgroundColor3 = AccentColor
+    else
+        WatermarkToggle.BackgroundColor3 = dBlack
+    end
+end)
+
+CreateCheckBoxTitle(WatermarkToggleTitle, "Watermark Toggle")
+
+CreateCheckBox(ChatSpamToggle, 0.2, dBlack)
+
+ChatSpamToggle.MouseButton1Click:Connect(function()
+    Settings.ChatSpam = not Settings.ChatSpam
+
+    if Settings.ChatSpam then
+        ChatSpamToggle.BackgroundColor3 = AccentColor
+    else
+        ChatSpamToggle.BackgroundColor3 = dBlack
+    end
+end)
+
+CreateCheckBoxTitle(ChatSpamToggleTitle, "Chat Spammer")
+
+CreateCheckBox(EspTeamCheckToggle, 0.1, AccentColor)
+
+EspTeamCheckToggle.MouseButton1Click:Connect(function()
+    Settings.EspTeamCheck = not Settings.EspTeamCheck
+
+    if Settings.EspTeamCheck then
+        EspTeamCheckToggle.BackgroundColor3 = AccentColor
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v.Team == LocalPlayer.Team then
+                if v ~= LocalPlayer and v.Character ~= nil then
+                    if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                        if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                            v.Character.HumanoidRootPart.NameEsp:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") ~= nil then
+                        v.Character.HumanoidRootPart.BoxEsp:Destroy()
+                    end
+                end
+            end
+        end
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character then
+                for _,v in pairs (v.Character:GetChildren()) do
+                    if v:IsA("MeshPart") or v.Name == "Head" or v.Name == "Torso" or v.Name == "Right Arm" or v.Name == "Left Arm" or v.Name == "Right Leg" or v.Name == "Left Leg" then
+                        for _,v in pairs(v:GetDescendants()) do
+                            if v:IsA("SurfaceGui") then
+                                v:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("HealthEsp") ~= nil then
+                        v.Character.HumanoidRootPart.HealthEsp:Destroy()
+                    end
+                end
+            end
+        end
+    else
+        EspTeamCheckToggle.BackgroundColor3 = dBlack
+    end
+end)
+
+CreateCheckBoxTitle(EspTeamCheckToggleTitle, "Team Check")
+
+CreateCheckBox(NameEspToggle, 0.1, dBlack)
+
+NameEspToggle.MouseButton1Click:Connect(function()
+    Settings.NameEsp = not Settings.NameEsp
+
+    if Settings.NameEsp then
+        NameEspToggle.BackgroundColor3 = AccentColor
+    else
+        NameEspToggle.BackgroundColor3 = dBlack
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                        v.Character.HumanoidRootPart.NameEsp:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end)
+
+--<Name Esp Code>--
+local NameEspGui = Instance.new("BillboardGui")
+local NameEsp = Instance.new("TextLabel", NameEspGui)
+
+NameEspGui.Name = "NameEsp"
+NameEspGui.ResetOnSpawn = false
+NameEspGui.AlwaysOnTop = true
+NameEspGui.Size = UDim2.new(1, 0, 1, 0)
+NameEspGui.ExtentsOffset = Vector3.new(0, 2.5, 0)
+
+NameEsp.BackgroundTransparency = 1
+NameEsp.Text = "Esp"
+NameEsp.AnchorPoint = Vector2.new(0.5, 0.5)
+NameEsp.Size = UDim2.new(1, 0, 1, 0)
+NameEsp.Position = UDim2.new(0.5, 0, 0, 0)
+NameEsp.Font = "GothamSemibold"
+NameEsp.TextSize = 11
+NameEsp.TextStrokeTransparency = 0
+NameEsp.TextStrokeColor3 = Black
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    for _,v in pairs (Players:GetPlayers()) do
+        if v.Team ~= LocalPlayer.Team or not Settings.EspTeamCheck then
+            if v ~= LocalPlayer and v.Character ~= nil and Settings.NameEsp == true then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") == nil then
+                        NameEsp.Text = ""..v.Name..""
+                        NameEsp.TextColor3 = White
+                        NameEspGui.Adornee = v.Character.HumanoidRootPart
+                        NameEspGui:Clone().Parent = v.Character.HumanoidRootPart
+                    end
+                end
+            end
+        end
+    end
+end)
+
+CreateCheckBoxTitle(NameEspToggleTitle, "Name Esp")
+
+CreateCheckBox(BoxEspToggle, 0.2, dBlack)
+
+BoxEspToggle.MouseButton1Click:Connect(function()
+    Settings.BoxEsp = not Settings.BoxEsp
+
+    if Settings.BoxEsp then
+        BoxEspToggle.BackgroundColor3 = AccentColor
+    else
+        BoxEspToggle.BackgroundColor3 = dBlack
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") ~= nil then
+                        v.Character.HumanoidRootPart.BoxEsp:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end)
+
+--<Box Esp Code>--
+local BoxEspGui = Instance.new("BillboardGui")
+local BoxEsp = Instance.new("ImageLabel", BoxEspGui)
+
+BoxEspGui.Name = "BoxEsp"
+BoxEspGui.ResetOnSpawn = false
+BoxEspGui.AlwaysOnTop = true
+BoxEspGui.Size = UDim2.new(4, 0, 6, 0)
+
+BoxEsp.Name = "Esp"
+BoxEsp.BackgroundTransparency = 1
+BoxEsp.Image = "http://www.roblox.com/asset/?id=8083895219"
+BoxEsp.AnchorPoint = Vector2.new(0.5, 0.5)
+BoxEsp.Size = UDim2.new(1, 0, 1, 0)
+BoxEsp.Position = UDim2.new(0.5, 0, 0.5, 0)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    for _,v in pairs (Players:GetPlayers()) do
+        if v.Team ~= LocalPlayer.Team or not Settings.EspTeamCheck then
+            if v ~= LocalPlayer and v.Character ~= nil and Settings.BoxEsp == true then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") == nil then
+                        BoxEsp.ImageColor3 = White
+                        BoxEspGui.Adornee = v.Character.HumanoidRootPart
+                        BoxEspGui:Clone().Parent = v.Character.HumanoidRootPart
+                    end
+                end
+            end
+        end
+    end
+end)
+
+CreateCheckBoxTitle(BoxEspToggleTitle, "Box Esp")
+
+CreateCheckBox(ChamsEspToggle, 0.3, dBlack)
+
+ChamsEspToggle.MouseButton1Click:Connect(function()
+    Settings.ChamsEsp = not Settings.ChamsEsp
+
+    if Settings.ChamsEsp then
+        ChamsEspToggle.BackgroundColor3 = AccentColor
+    else
+        ChamsEspToggle.BackgroundColor3 = dBlack
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character then
+                for _,v in pairs (v.Character:GetChildren()) do
+                    if v:IsA("MeshPart") or v.Name == "Head" or v.Name == "Torso" or v.Name == "Right Arm" or v.Name == "Left Arm" or v.Name == "Right Leg" or v.Name == "Left Leg" then
+                        for _,v in pairs(v:GetDescendants()) do
+                            if v:IsA("SurfaceGui") then
+                                v:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+--<Chams Code>--
+function CreateChams(varParent, varFace)
+    local ChamsGui = Instance.new("SurfaceGui", varParent)
+    ChamsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ChamsGui.Face = Enum.NormalId[varFace]
+	ChamsGui.LightInfluence = 0
+	ChamsGui.ResetOnSpawn = false
+    ChamsGui.Name = "ChamsEsp"
+    ChamsGui.AlwaysOnTop = true
+    local ChamsEsp = Instance.new("Frame", ChamsGui)
+    ChamsEsp.Name = "Esp"
+	ChamsEsp.BackgroundColor3 = White
+    ChamsEsp.BackgroundTransparency = Settings.ChamsOpacityTranslation
+    ChamsEsp.BorderSizePixel = 0
+	ChamsEsp.Size = UDim2.new(1, 0, 1, 0)
+end
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    for _,v in pairs (Players:GetPlayers()) do
+        if v.Team ~= LocalPlayer.Team or not Settings.EspTeamCheck then
+            if v ~= LocalPlayer and v.Character ~= nil and Settings.ChamsEsp == true and v.Character:FindFirstChild("Head") then
+                for _,v in pairs (v.Character:GetChildren()) do
+                    if v:IsA("MeshPart") or v.Name == "Head" or v.Name == "Torso" or v.Name == "Right Arm" or v.Name == "Left Arm" or v.Name == "Right Leg" or v.Name == "Left Leg" then
+                        if not v:FindFirstChild("ChamsEsp") then
+                            CreateChams(v, "Back")
+                            CreateChams(v, "Front")
+                            CreateChams(v, "Left")
+                            CreateChams(v, "Right")
+                            CreateChams(v, "Right")
+                            CreateChams(v, "Top")
+                            CreateChams(v, "Bottom")
+                        end
+                    end
+                end
+            end     
+        end
+    end
+end)
+
+CreateCheckBoxTitle(ChamsEspToggleTitle, "Chams Esp")
+
+CreateCheckBox(HealthEspToggle, 0.4, dBlack)
+
+HealthEspToggle.MouseButton1Click:Connect(function()
+    Settings.HealthEsp = not Settings.HealthEsp
+
+    if Settings.HealthEsp then
+        HealthEspToggle.BackgroundColor3 = AccentColor
+    else
+        HealthEspToggle.BackgroundColor3 = dBlack
+    end
+    wait()
+    Update()
+end)
+
+--<Health Esp Code>--
+local HealthEspGui = Instance.new("BillboardGui")
+local HealthEsp = Instance.new("TextLabel", HealthEspGui)
+
+HealthEspGui.Name = "HealthEsp"
+HealthEspGui.AlwaysOnTop = true
+HealthEspGui.Size = UDim2.new(1, 0, 1, 0)
+HealthEspGui.ExtentsOffset = Vector3.new(0, -3, 0)
+
+HealthEsp.Name = "Esp"
+HealthEsp.BackgroundTransparency = 1
+HealthEsp.AnchorPoint = Vector2.new(0.5, 0.5)
+HealthEsp.Size = UDim2.new(1, 0, 1, 0)
+HealthEsp.Position = UDim2.new(0.5, 0, 1, 0)
+HealthEsp.Text = ""
+HealthEsp.TextColor3 = Color3.fromRGB(0, 255, 0)
+HealthEsp.TextStrokeTransparency = 0
+
+CreateCheckBoxTitle(HealthEspToggleTitle, "Health Esp")
+
+CreateTextLabel(ChamsOpacityTextBox, 0.2)
+
+CreateCheckBoxTitle(ChamsOpacityTextBoxTitle, "Chams Opacity")
+
+CreatvEdit(ChamsOpacityvEdit1, ChamsOpacityvEdit2)
+
+ChamsOpacityvEdit1.MouseButton1Click:Connect(function()
+    if Settings.ChamsOpacity < 5 then
+        Settings.ChamsOpacity = Settings.ChamsOpacity + 1
+    end
+    ChamsOpacityTextBox.Text = tostring(Settings.ChamsOpacity)
+
+    if Settings.ChamsOpacity == 5 then
+        Settings.ChamsOpacityTranslation = 0
+    elseif Settings.ChamsOpacity == 4 then
+        Settings.ChamsOpacityTranslation = 0.2
+    elseif Settings.ChamsOpacity == 3 then
+        Settings.ChamsOpacityTranslation = 0.4
+    elseif Settings.ChamsOpacity == 2 then
+        Settings.ChamsOpacityTranslation = 0.6
+    elseif Settings.ChamsOpacity == 1 then
+        Settings.ChamsOpacityTranslation = 0.8
+    end
+
+    RefreshChamsEsp()
+end)
+
+ChamsOpacityvEdit2.MouseButton1Click:Connect(function()
+    if Settings.ChamsOpacity > 1 then
+        Settings.ChamsOpacity = Settings.ChamsOpacity - 1
+    end
+    ChamsOpacityTextBox.Text = tostring(Settings.ChamsOpacity)
+
+    if Settings.ChamsOpacity == 5 then
+        Settings.ChamsOpacityTranslation = 0
+    elseif Settings.ChamsOpacity == 4 then
+        Settings.ChamsOpacityTranslation = 0.2
+    elseif Settings.ChamsOpacity == 3 then
+        Settings.ChamsOpacityTranslation = 0.4
+    elseif Settings.ChamsOpacity == 2 then
+        Settings.ChamsOpacityTranslation = 0.6
+    elseif Settings.ChamsOpacity == 1 then
+        Settings.ChamsOpacityTranslation = 0.8
+    end
+
+    RefreshChamsEsp()
+end)
+
+---<End Functions>---
+function RefreshNameEsp()
+    if Settings.NameEsp then
+        Settings.NameEsp = false
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                        v.Character.HumanoidRootPart.NameEsp:Destroy()
+                    end
+                end
+            end
+        end
+        Settings.NameEsp = true
+    end
+end
+
+function RefreshBoxEsp()
+    if Settings.BoxEsp then
+        Settings.BoxEsp = false
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") ~= nil then
+                        v.Character.HumanoidRootPart.BoxEsp:Destroy()
+                    end
+                end
+            end
+        end
+        Settings.NameEsp = true
+    end
+end
+
+function RefreshChamsEsp()
+    if Settings.ChamsEsp then
+        Settings.ChamsEsp = false
+
+        for _,v in pairs (Players:GetPlayers()) do
+            if v ~= LocalPlayer and v.Character then
+                for _,v in pairs (v.Character:GetChildren()) do
+                    if v:IsA("MeshPart") or v.Name == "Head" or v.Name == "Torso" or v.Name == "Right Arm" or v.Name == "Left Arm" or v.Name == "Right Leg" or v.Name == "Left Leg" then
+                        for _,v in pairs(v:GetDescendants()) do
+                            if v:IsA("SurfaceGui") then
+                                v:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        Settings.ChamsEsp = true
+    end
+end
+
+function RefreshHealthEsp()
+end
+
+function Update()
+    while wait() do  
+        if Settings.HealthEsp then
+            for _,v in pairs(Players:GetChildren()) do
+                if v ~= game.Players.LocalPlayer and v.Character ~= nil then
+                    if v.Team ~= LocalPlayer.Team or not Settings.EspTeamCheck then
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart:FindFirstChild("HealthEsp") == nil then
+                                HealthEspGui.Adornee = v.Character.HumanoidRootPart
+                                HealthEspGui:Clone().Parent = v.Character.HumanoidRootPart
+                            end
+                        end
+                        if v ~= game.Players.LocalPlayer and v.Character ~= nil then
+                            if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                                if v.Character.HumanoidRootPart.HealthEsp:FindFirstChild("Esp") then
+                                    if v.Character:FindFirstChild("Humanoid") then
+                                        v.Character.HumanoidRootPart.HealthEsp:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                        if v.Character.Humanoid.Health >= 75 then
+                                            v.Character.HumanoidRootPart.HealthEsp:FindFirstChild("Esp").TextColor3 = Green
+                                        elseif v.Character.Humanoid.Health >= 50 then
+                                            v.Character.HumanoidRootPart.HealthEsp:FindFirstChild("Esp").TextColor3 = Yellow
+                                        elseif v.Character.Humanoid.Health >= 25 then
+                                            v.Character.HumanoidRootPart.HealthEsp:FindFirstChild("Esp").TextColor3 = Orange
+                                        elseif v.Character.Humanoid.Health >= 0 then
+                                            v.Character.HumanoidRootPart.HealthEsp:FindFirstChild("Esp").TextColor3 = Red
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            for _,v in pairs (Players:GetPlayers()) do
+                if v ~= LocalPlayer and v.Character ~= nil then
+                    if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                        if v.Character.HumanoidRootPart:FindFirstChild("HealthEsp") ~= nil then
+                            v.Character.HumanoidRootPart.HealthEsp:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+coroutine.wrap(function()
+    while wait() do
+        if Settings.ChatSpam then
+            ChatSpam()
+        end
+    end
+end)()
+
+UserInputService.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.RightShift then
+        MenuGui.Enabled = not MenuGui.Enabled
+	end
+end)
+
+function UpdateTime()
+    Seconds = Seconds + 1
+
+    if Seconds == 60 then
+        Minutes = Minutes + 1
+        Seconds = 0
+    end
+
+    if Minutes == 60 then
+        Hours = Hours + 1
+        Minutes = 0
+    end
+
+    WatermarkBase.Text = "Ninelives "..Version.." | "..LocalPlayer.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
+end
+coroutine.wrap(function()
+    while wait(1) do
+        UpdateTime()
+    end
+end)()
